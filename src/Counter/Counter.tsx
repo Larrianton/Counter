@@ -1,15 +1,15 @@
 import React from 'react';
-import style from '../Counter/Counter.module.css'
+import style from "../App.module.css" ;
 import {Display} from "./Display";
+import {ButtonsCounter} from "./ButtonsCounter";
 
 
 
 export type counterType = {
     counter: number
+    maxCount:string
     incrCounter: () => void
     resetCounter:() => void
-    maxCount:string
-
 }
 
 export function Counter(props: counterType) {
@@ -19,10 +19,7 @@ export function Counter(props: counterType) {
         <div className={style.counterWrapper}>
             <div className={style.counterItems}>
                <Display counter={props.counter} maxCount={props.maxCount}/>
-                <div className={style.counterButtons}>
-                    <button onClick={props.incrCounter}>Incr</button>
-                    <button onClick={props.resetCounter}>Reset</button>
-                </div>
+              <ButtonsCounter incrCounter={props.incrCounter} resetCounter={props.resetCounter} />
 
             </div>
         </div>
