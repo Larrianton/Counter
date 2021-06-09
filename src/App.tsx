@@ -1,14 +1,26 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.module.css';
 import {Counter} from "./Counter/Counter";
 import style from "./App.module.css" ;
 import {SettingsCounter} from "./SettingsCounter/SettingsCounter";
+import {Grid, Paper} from "@material-ui/core";
 
 
 function App() {
     let [counter, setCounter] = useState<number>(0)
     let [minValue, setMinValue] = useState<number>(0)
     let [maxValue, setMaxValue] = useState<number>(5)
+    useEffect(() => getLocalStorage(), [])
+    useEffect(() => setLocalStorage(), [minValue, maxValue])
+    const getLocalStorage = () => {
+
+        setMaxValue(Number(localStorage.getItem("maxValue")))
+        setMinValue(Number(localStorage.getItem("minValue")))
+    }
+    const setLocalStorage = () => {
+        localStorage.setItem("maxValue", JSON.stringify(maxValue))
+        localStorage.setItem("minValue", JSON.stringify(minValue))
+    }
 
     function changeMinValue(minValue: number) {
         setMinValue(minValue);
@@ -18,14 +30,15 @@ function App() {
         setMaxValue(maxValue);
     }
 
-    const setSettingsCounter = ()  => {
+    const setSettingsCounter = () => {
         setCounter(minValue);
-        console.log("set counter")
+        setLocalStorage();
+
     }
     const resetSettingsCounter = () => {
-        console.log("reset counter")
         setMaxValue(5)
         setMinValue(0)
+
     }
 
 
@@ -38,25 +51,35 @@ function App() {
         }
     }
 
-    function resetCounter() {
+    function resetCounterCallback() {
         setCounter(0)
     }
 
 
     return (
-        <div className={style.App}>
-            <Counter counter={counter}
-                     incrCounter={incrCounterCallback}
-                     resetCounter={resetCounter}
-                     maxCount={maxCount}
-            />
-            <SettingsCounter changeMaxValue={changeMaxValue}
-                             changeMinValue={changeMinValue}
-                             minValue={minValue} maxValue={maxValue}
-                             setSettingsCounter={setSettingsCounter}
-                             resetSettingsCounter={resetSettingsCounter}
-            />
-        </div>
+
+            <Grid container  justify={"space-around"} alignItems={"center"} style={{height:"768px"}} >
+                <Grid item >
+                    <Paper>
+                        <Counter counter={counter}
+                                 incrCounter={incrCounterCallback}
+                                 resetCounter={resetCounterCallback}
+                                 maxCount={maxCount}
+                        />
+                    </Paper>
+                </ Grid>
+                <Grid  item >
+                    <Paper>
+                        <SettingsCounter changeMaxValue={changeMaxValue}
+                                         changeMinValue={changeMinValue}
+                                         minValue={minValue} maxValue={maxValue}
+                                         setSettingsCounter={setSettingsCounter}
+                                         resetSettingsCounter={resetSettingsCounter}
+                        />
+                    </Paper>
+                </Grid>
+            </Grid>
+
     );
 }
 

@@ -16,12 +16,12 @@ export function Counter(props: counterType) {
 
 
     return (
-        <div className={style.counterWrapper}>
-            <div className={style.counterItems}>
+
+            <div>
                <Display counter={props.counter} maxCount={props.maxCount}/>
               <ButtonsCounter incrCounter={props.incrCounter} resetCounter={props.resetCounter} />
 
             </div>
-        </div>
+
     );
 }
