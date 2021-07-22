@@ -9,6 +9,7 @@ export type SettingsCounterPropsType = {
     maxValue: number
     setSettingsCounter: () => void
     resetSettingsCounter: () => void
+
 }
 
 export function SettingsCounter(props: SettingsCounterPropsType) {
@@ -23,6 +24,8 @@ export function SettingsCounter(props: SettingsCounterPropsType) {
                 maxValue={props.maxValue}/>
             <ButtonsSettings setSettingsCounter={props.setSettingsCounter}
                              resetSettingsCounter={props.resetSettingsCounter}
+
+
             />
 
         </div>

@@ -1,15 +1,14 @@
 import React from 'react';
-import style from "../App.module.css" ;
 import {Display} from "./Display";
 import {ButtonsCounter} from "./ButtonsCounter";
-
+import {Grid} from "@material-ui/core";
 
 
 export type counterType = {
     counter: number
-    maxCount:string
     incrCounter: () => void
-    resetCounter:() => void
+    resetCounter: () => void
+    disabled: boolean
 }
 
 export function Counter(props: counterType) {
@@ -17,11 +16,15 @@ export function Counter(props: counterType) {
 
     return (
 
-            <div>
-               <Display counter={props.counter} maxCount={props.maxCount}/>
-              <ButtonsCounter incrCounter={props.incrCounter} resetCounter={props.resetCounter} />
+        <Grid container>
 
-            </div>
+            <Display counter={props.counter} disabled={props.disabled}/>
+
+
+            <ButtonsCounter incrCounter={props.incrCounter} resetCounter={props.resetCounter}
+                            disabled={props.disabled}/>
+
+        </Grid>
 
     );
 }

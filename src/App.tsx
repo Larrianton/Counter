@@ -1,85 +1,90 @@
-import React, {useEffect, useState} from 'react';
+import React, {useReducer} from 'react';
 import './App.module.css';
 import {Counter} from "./Counter/Counter";
-import style from "./App.module.css" ;
 import {SettingsCounter} from "./SettingsCounter/SettingsCounter";
-import {Grid, Paper} from "@material-ui/core";
+import {Container, Grid, Paper} from "@material-ui/core";
+import {counterReducer} from "./counter-reducer";
+import {incrCounter, resetCounter, resetSettings, setMaxValue, setMinValue, setSettings} from "./actions";
 
 
 function App() {
-    let [counter, setCounter] = useState<number>(0)
-    let [minValue, setMinValue] = useState<number>(0)
-    let [maxValue, setMaxValue] = useState<number>(5)
-    useEffect(() => getLocalStorage(), [])
-    useEffect(() => setLocalStorage(), [minValue, maxValue])
-    const getLocalStorage = () => {
-
-        setMaxValue(Number(localStorage.getItem("maxValue")))
-        setMinValue(Number(localStorage.getItem("minValue")))
-    }
-    const setLocalStorage = () => {
-        localStorage.setItem("maxValue", JSON.stringify(maxValue))
-        localStorage.setItem("minValue", JSON.stringify(minValue))
-    }
+    // let [counter, setCounter] = useState<number>(0)
+    // let [minValue, setMinValue] = useState<number>(0)
+    // let [maxValue, setMaxValue] = useState<number>(5)
+    // let [disabled, setDisabled] = useState<boolean>(false)
+    // useEffect(() => getLocalStorage(), [])
+    // useEffect(() => setLocalStorage(), [minValue, maxValue])
+    // const getLocalStorage = () => {
+    //
+    //     setMaxValue(Number(localStorage.getItem("maxValue")))
+    //     setMinValue(Number(localStorage.getItem("minValue")))
+    // }
+    // const setLocalStorage = () => {
+    //     localStorage.setItem("maxValue", JSON.stringify(maxValue))
+    //     localStorage.setItem("minValue", JSON.stringify(minValue))
+    // }
+    let [state, dispatch] = useReducer(counterReducer, {
+        counter: 0,
+        minValue: 0,
+        maxValue: 0,
+        disabled: false,
+    })
 
     function changeMinValue(minValue: number) {
-        setMinValue(minValue);
+        dispatch(setMinValue(minValue));
     }
 
     function changeMaxValue(maxValue: number) {
-        setMaxValue(maxValue);
+        dispatch(setMaxValue(maxValue));
     }
 
     const setSettingsCounter = () => {
-        setCounter(minValue);
-        setLocalStorage();
+        dispatch(resetCounter());
+        dispatch(setSettings(state.minValue));
 
     }
+
+
     const resetSettingsCounter = () => {
-        setMaxValue(5)
-        setMinValue(0)
+        dispatch(resetSettings())
 
     }
-
-
-    let maxCount = counter === maxValue ? style.counterAlert : style.counter
 
 
     function incrCounterCallback() {
-        if (counter < maxValue) {
-            setCounter(counter + 1);
-        }
+        dispatch(incrCounter())
     }
 
     function resetCounterCallback() {
-        setCounter(0)
+        dispatch(resetCounter())
     }
 
 
     return (
-
-            <Grid container  justify={"space-around"} alignItems={"center"} style={{height:"768px"}} >
-                <Grid item >
+        <Container>
+            <Grid container justify={"space-around"} alignItems={"center"} style={{height: "100vh"}}>
+                <Grid item>
                     <Paper>
-                        <Counter counter={counter}
+                        <Counter counter={state.counter}
                                  incrCounter={incrCounterCallback}
                                  resetCounter={resetCounterCallback}
-                                 maxCount={maxCount}
+                                 disabled={state.disabled}
                         />
                     </Paper>
                 </ Grid>
-                <Grid  item >
+                <Grid item>
                     <Paper>
                         <SettingsCounter changeMaxValue={changeMaxValue}
                                          changeMinValue={changeMinValue}
-                                         minValue={minValue} maxValue={maxValue}
+                                         minValue={state.minValue} maxValue={state.maxValue}
                                          setSettingsCounter={setSettingsCounter}
                                          resetSettingsCounter={resetSettingsCounter}
+
                         />
                     </Paper>
                 </Grid>
             </Grid>
-
+        </Container>
     );
 }
 
